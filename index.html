@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./styles.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css2?family=Rowdies:wght@300;700&display=swap" rel="stylesheet">
+    <title>Exercise 5</title>
+</head>
+
+<body>
+    <div id="container">
+        <div id="main">
+            <img id="mainPic" src="" alt="" />
+            <div id="picDescription">
+                <h1 id="caption"></h1>
+                <p id="content"></p>
+            </div>
+            <div id="navigation">
+                <a class="prev" onclick="move(-1)">&#10094;</a>
+                <a class="next" onclick="move(1)">&#10095;</a>
+            </div>
+        </div>
+        <div id="listPics">
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script>
+        const mainImage = {};
+
+        // Initial list pictures
+        let listPicHTML = "";
+        data.forEach(val => {
+            listPicHTML += '<div class="carouselPic" onclick="changePic(' + val.id + ')">';
+            listPicHTML += '<img id="pic' + val.id + '" src="' + val.linkImg + '" alt="pic' + val.id + '" />';
+            listPicHTML += '</div>';
+        })
+        document.getElementById("listPics").innerHTML = listPicHTML;
+
+        // Change image
+        function changePic(id) {
+            if (id < 1) id = 6;
+            if (id > 6) id = 1;
+
+            const image = data.filter(val => val.id === id);
+
+            document.getElementById("mainPic").src = image[0].linkImg;
+            document.getElementById("mainPic").alt = image[0].caption.toLowerCase();
+            document.getElementById("caption").innerHTML = image[0].caption;
+            document.getElementById("content").innerHTML = image[0].content;
+
+            setActiveForMainImg(image[0]);
+            restartMainImg(image[0]);
+
+            const element = document.getElementById("main");
+            element.classList.remove("animationMainPic");
+            void element.offsetWidth;
+            element.classList.add("animationMainPic");
+        }
+
+        // Restart main image
+        function restartMainImg(image) {
+            mainImage.id = image.id;
+            mainImage.linkImg = image.linkImg;
+            mainImage.caption = image.caption;
+            mainImage.content = image.content;
+        }
+
+        // Go backward and forward
+        function move(direction) {
+            changePic(mainImage.id + direction);
+        }
+
+        // Set active class
+        function setActiveForMainImg(image) {
+            let oldImg = document.getElementById("pic" + mainImage.id);
+            oldImg.classList.remove("active");
+
+            let newImg = document.getElementById("pic" + image.id);
+            newImg.classList.add("active");
+        }
+
+        restartMainImg(data[0]);
+        changePic(data[0].id);
+    </script>
+</body>
+
+</html>
