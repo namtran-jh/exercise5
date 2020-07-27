@@ -24,6 +24,10 @@
         </div>
         <div id="listPics">
         </div>
+        <div id="buttonSwapMode">
+            <button id="modeManual" onclick="modeManual()">Manual</button>
+            <button id="modeAuto" onclick="modeAuto()">Auto</button>
+        </div>
     </div>
 
     <script src="data.js"></script>
@@ -84,6 +88,26 @@
 
         restartMainImg(data[0]);
         changePic(data[0].id);
+
+        // Switch modes
+        let mode;
+
+        function modeManual() {
+            clearTimeout(mode);
+        }
+
+        function modeAuto() {
+            move(1);
+            mode = setTimeout(modeAuto, 3000);
+        }
+
+        // Set key down
+        document.addEventListener("keydown", setKeyDown, false);
+
+        function setKeyDown(event) {
+            if (event.keyCode === 37) move(-1)
+            if (event.keyCode === 39) move(1)
+        }
     </script>
 </body>
 
