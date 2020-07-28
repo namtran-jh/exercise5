@@ -33,6 +33,9 @@
     <script src="data.js"></script>
     <script>
         const mainImage = {};
+        const modeSwitch = {
+            type: 0
+        };
 
         // Initial list pictures
         let listPicHTML = "";
@@ -75,6 +78,7 @@
         // Go backward and forward
         function move(direction) {
             changePic(mainImage.id + direction);
+            if (modeSwitch.type === 1) modeAuto();
         }
 
         // Set active class
@@ -93,20 +97,36 @@
         let mode;
 
         function modeManual() {
-            clearTimeout(mode);
+            modeSwitch.type = 0;
+            clearInterval(mode);
         }
 
         function modeAuto() {
-            move(1);
-            mode = setTimeout(modeAuto, 3000);
+            clearInterval(mode);
+            modeSwitch.type = 1;
+            // let tmp = mainImage.id
+            mode = setInterval(function() {
+                move(1);
+                //     console.log(tmp, mainImage.id)
+                //     if (tmp !== mainImage.id) {
+                //         clearInterval(mode);
+                //         modeAuto();
+                //     } else {
+                //         move(1);
+                //     }
+            }, 3000)
         }
 
         // Set key down
         document.addEventListener("keydown", setKeyDown, false);
 
         function setKeyDown(event) {
-            if (event.keyCode === 37) move(-1)
-            if (event.keyCode === 39) move(1)
+            if (event.keyCode === 37) {
+                move(-1);
+            }
+            if (event.keyCode === 39) {
+                move(1);
+            }
         }
     </script>
 </body>
