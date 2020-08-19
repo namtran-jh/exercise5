@@ -28,12 +28,12 @@ p {
     font-weight: 300;
 }
 
-#mainPic {
+#showingPicture {
     width: 500px;
     filter: brightness(50%)
 }
 
-#picDescription {
+#pictureDescription {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -52,7 +52,7 @@ p {
     cursor: pointer;
 }
 
-#listPics {
+#listPictures {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -64,12 +64,12 @@ p {
     opacity: 1 !important;
 }
 
-.carouselPic img {
+.carouselPicture img {
     margin: 2px;
     opacity: 0.5;
 }
 
-.carouselPic img:hover {
+.carouselPicture img:hover {
     cursor: pointer;
     opacity: 1;
 }
@@ -91,7 +91,7 @@ p {
 
 /* Animation for Main Picture */
 
-.animationMainPic {
+.animationMainPicture {
     -webkit-animation-name: fade 1.5s ease-in-out;
     animation: fade 1.5s ease-in-out;
 }
