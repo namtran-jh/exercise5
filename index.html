@@ -11,22 +11,23 @@
 
 <body>
     <div id="container">
-        <div id="main">
-            <img id="showingPicture" src="" alt="" />
-            <div id="pictureDescription">
-                <h1 id="pictureCaption"></h1>
-                <p id="pictureContent"></p>
+        <div id="currentShowingPictureArea">
+            <img id="currentShowingPicture" src="" alt="" />
+            <div id="currentShowingPictureDescription">
+                <h1 id="currentShowingPictureCaption"></h1>
+                <p id="currentShowingPictureContent"></p>
             </div>
             <div id="navigation">
                 <a class="navigationPrev" onclick="movePicture(-1)">&#10094;</a>
                 <a class="navigationNext" onclick="movePicture(1)">&#10095;</a>
             </div>
         </div>
-        <div id="listPics">
+        <div id="listItemPicture">
         </div>
-        <div id="buttonSwapMode">
-            <button id="modeManual" onclick="setModeManual()">Manual</button>
-            <button id="modeAuto" onclick="setModeAuto()">Auto</button>
+        <div id="buttonSwapCarouselLoadingMode">
+            <!-- Config: Manual code: 0 || Auto code: 1 -->
+            <button id="modeManual" onclick="setCarouselLoadingMode(0)">Manual</button>
+            <button id="modeAuto" onclick="setCarouselLoadingMode(1)">Auto</button>
         </div>
     </div>
 

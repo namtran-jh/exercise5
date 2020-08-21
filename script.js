@@ -1,81 +1,103 @@
-const showingPicture = {};
-
 const MANUAL = 0;
 const AUTO = 1;
-const modeSwitch = {
-    type: MANUAL
+
+const pictureCarouselConfig = {
+    currentShowingPicture: {},
+    carouselLoadingMode: MANUAL,
+    intervalMethod: null
 };
 
-let mode; // variable hold interval method
-
-
-let listPictureHTML = "";
-data.forEach(val => {
-    listPictureHTML += '<div class="carouselPicture" onclick="changePicture(' + val.id + ')">';
-    listPictureHTML += '<img id="pic' + val.id + '" src="' + val.linkPicture + '" alt="pic' + val.id + '" />';
-    listPictureHTML += '</div>';
-})
-document.getElementById("listPictures").innerHTML = listPictureHTML;
-
-
-function changePicture(pictureId) {
-    if (pictureId < 1) pictureId = 6; // when we move backward over the first picture, set showing state to the last picture
-    if (pictureId > 6) pictureId = 1; // vice versa
-
-    const picture = data.filter(val => val.id === pictureId);
-
-    document.getElementById("showingPicture").src = picture[0].linkPicture;
-    document.getElementById("showingPicture").alt = picture[0].caption.toLowerCase();
-    document.getElementById("pictureCaption").innerHTML = picture[0].caption;
-    document.getElementById("pictureContent").innerHTML = picture[0].content;
-
-    setActiveForShowingPicture(picture[0]);
-    restartShowingPicture(picture[0]);
-
-    const element = document.getElementById("main");
-    element.classList.remove("animationMainPicture");
-    void element.offsetWidth;
-    element.classList.add("animationMainPicture");
+// TODO: -1
+function renderUI(data) {
+    let listItemPictureHTML = "";
+    data.forEach(val => {
+        listItemPictureHTML += `
+        <div class='carouselListItemPicture' onclick='changeCurrentShowingPicture(${val.id})'>
+            <img id='pic${val.id}' src='${val.linkPicture}' alt='pic${val.id}' />
+        </div>
+    `;
+    });
+    document.getElementById("listItemPicture").innerHTML = listItemPictureHTML;
 }
 
-// Restart showingPicture global variable
-function restartShowingPicture(picture) {
-    showingPicture.id = picture.id;
-    showingPicture.linkPicture = picture.linkImg;
-    showingPicture.caption = picture.caption;
-    showingPicture.content = picture.content;
+//TODO: -1
+function changeCurrentShowingPicture(id) {
+    const newPictureData = getCurrentPictureData(id);
+
+    changeCurrentShowingPictureWithNewData(newPictureData);
+    setCurrentShowingPictureActive(newPictureData[0]);
+    restartCurrentShowingPictureInConfig(newPictureData[0]);
+
+    triggerTransitionAnimation();
+    resetIntervalModeAuto();
 }
 
-// Go backward and forward
 function movePicture(direction) {
-    changePicture(showingPicture.id + direction);
-    if (modeSwitch.type === AUTO) setModeAuto();
+    const pictureId = handleEndlessPicture(pictureCarouselConfig.currentShowingPicture.id + direction);
+    changeCurrentShowingPicture(pictureId);
 }
 
+// MAXIMUM LIST ITEM PICTURE: data.length
+function handleEndlessPicture(id) {
+    if (id < 0) return data.length - 1;
+    if (id > data.length - 1) return 0;
+    return id;
+}
 
-function setActiveForShowingPicture(picture) {
-    let oldPicture = document.getElementById("pic" + showingPicture.id);
+function getCurrentPictureData(id) {
+    return data.filter(val => val.id === id);
+}
+
+function changeCurrentShowingPictureWithNewData(data) {
+    document.getElementById("currentShowingPicture").src = data[0].linkPicture;
+    document.getElementById("currentShowingPicture").alt = data[0].caption.toLowerCase();
+    document.getElementById("currentShowingPictureCaption").innerHTML = data[0].caption;
+    document.getElementById("currentShowingPictureContent").innerHTML = data[0].content;
+}
+
+function setCurrentShowingPictureActive(picture) {
+    const oldPicture = document.getElementById("pic" + pictureCarouselConfig.currentShowingPicture.id);
     oldPicture.classList.remove("active");
 
-    let newPicture = document.getElementById("pic" + picture.id);
+    const newPicture = document.getElementById("pic" + picture.id);
     newPicture.classList.add("active");
 }
 
+function restartCurrentShowingPictureInConfig(picture) {
+    pictureCarouselConfig.currentShowingPicture = {
+        ...pictureCarouselConfig.currentShowingPicture,
+        ...picture
+    };
+}
+
+function triggerTransitionAnimation() {
+    const element = document.getElementById("currentShowingPictureArea");
+    element.classList.remove("animationCurrentShowingPicture");
+    void element.offsetWidth;
+    element.classList.add("animationCurrentShowingPicture");
+}
+
+function resetIntervalModeAuto() {
+    if (pictureCarouselConfig.carouselLoadingMode === AUTO) setModeAuto();
+}
+
 function setModeManual() {
-    modeSwitch.type = MANUAL;
-    clearInterval(mode);
+    pictureCarouselConfig.carouselLoadingMode = MANUAL;
+    clearInterval(pictureCarouselConfig.intervalMethod);
 }
 
 function setModeAuto() {
-    clearInterval(mode);
-    modeSwitch.type = AUTO;
-    mode = setInterval(function() {
+    clearInterval(pictureCarouselConfig.intervalMethod);
+    pictureCarouselConfig.carouselLoadingMode = AUTO;
+    pictureCarouselConfig.intervalMethod = setInterval(function() {
         movePicture(1);
-    }, 3000)
+    }, 3000);
 }
 
-// Set key down for moving backward, forward
-document.addEventListener("keydown", setKeyDown, false);
+function setCarouselLoadingMode(mode) {
+    if (mode === MANUAL) setModeManual();
+    if (mode === AUTO) setModeAuto();
+}
 
 function setKeyDown(event) {
     if (event.keyCode === 37) {
@@ -86,5 +108,10 @@ function setKeyDown(event) {
     }
 }
 
-restartShowingPicture(data[0]);
-changePicture(data[0].id);
+// START
+(function startPictureCarousel() {
+    document.addEventListener("keydown", setKeyDown, false);
+    renderUI(data);
+    restartCurrentShowingPictureInConfig(data[0]);
+    changeCurrentShowingPicture(data[0].id);
+})();

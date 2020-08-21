@@ -7,7 +7,7 @@
     margin: 0 auto;
 }
 
-#main {
+#currentShowingPictureArea {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -19,7 +19,7 @@
     color: white;
 }
 
-#main h1,
+#currentShowingPictureArea h1,
 p {
     margin: 5px;
 }
@@ -28,12 +28,15 @@ p {
     font-weight: 300;
 }
 
-#showingPicture {
+
+/* TODO: -2 */
+
+#currentShowingPicture {
     width: 500px;
     filter: brightness(50%)
 }
 
-#pictureDescription {
+#currentShowingPictureDescription {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -52,7 +55,7 @@ p {
     cursor: pointer;
 }
 
-#listPictures {
+#listItemPicture {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -64,23 +67,23 @@ p {
     opacity: 1 !important;
 }
 
-.carouselPicture img {
+.carouselListItemPicture img {
     margin: 2px;
     opacity: 0.5;
 }
 
-.carouselPicture img:hover {
+.carouselListItemPicture img:hover {
     cursor: pointer;
     opacity: 1;
 }
 
-#buttonSwapMode {
+#buttonSwapCarouselLoadingMode {
     display: flex;
     flex-direction: row;
     justify-content: center;
 }
 
-#buttonSwapMode button {
+#buttonSwapCarouselLoadingMode button {
     font-weight: 300;
     font-size: 20px;
     margin: 0px 5px;
@@ -89,9 +92,12 @@ p {
 }
 
 
-/* Animation for Main Picture */
+/* Animation for Current Showing Picture */
 
-.animationMainPicture {
+
+/* TODO: -1 */
+
+.animationCurrentShowingPicture {
     -webkit-animation-name: fade 1.5s ease-in-out;
     animation: fade 1.5s ease-in-out;
 }
